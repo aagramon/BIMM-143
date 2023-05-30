@@ -1,0 +1,98 @@
+---
+title: "HW 06"
+author: "Arturo Agramont"
+date: "2023-04-25"
+output:
+  html_document: default
+  pdf: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Protein Code
+
+First install and load the bio3d package
+
+```{r}
+#install.packages("bio3d")
+library(bio3d)
+```
+
+I will begin by running the code provided
+
+```{r}
+library(bio3d)
+s1 <- read.pdb("4AKE") # kinase with drug
+s2 <- read.pdb("1AKE") # kinase no drug
+s3 <- read.pdb("1E4Y") # kinase with drug
+
+s1.chainA <- trim.pdb(s1, chain="A", elety="CA")
+s2.chainA <- trim.pdb(s2, chain="A", elety="CA")
+s3.chainA <- trim.pdb(s3, chain="A", elety="CA")
+
+s1.b <- s1.chainA$atom$b
+s2.b <- s2.chainA$atom$b
+s3.b <- s3.chainA$atom$b
+
+plotb3(s1.b, sse=s1.chainA, typ="l", ylab="Bfactor")
+plotb3(s2.b, sse=s2.chainA, typ="l", ylab="Bfactor")
+plotb3(s3.b, sse=s3.chainA, typ="l", ylab="Bfactor")
+```
+
+I will start by trying to apply all portions to "4AKE" or "s1"
+
+Firstly starting with trim in the function
+
+```{r}
+trimpro = function(x){ #naming the function for trimming protein
+  trim.pdb(x, chain="A", elety="CA") #using trim function on pdb input
+}
+trimpro(s1)
+```
+
+The function is providing a trim of each pdb file.
+
+```{r}
+trimpro(s2)
+```
+
+Now we will try to implement the "\$atom\$b" into the function
+
+```{r}
+atom = function(x){ #naming the function protein
+  trimpro(x)$atom$b #adding the atom portion
+}
+atom(s1)
+```
+
+The function provides the atom numbers.
+
+Now we will try to add the plot portion to the function
+
+```{r}
+#' Protein function to provide a plot
+#'
+#' @param x, or input is a loaded pdb file. For Example: s1 is a loaded file from bio3d using function read.pdb()
+#'
+#' @return returns a plot for specified protein
+#'
+#'
+#' @examples
+protein = function(x){ #naming the function protein
+  plotb3(atom(x), sse = trimpro(x), typ="l", ylab="Bfactor") #implementing both functions I had previously written in order to make a plot 
+}
+protein(s1)
+```
+
+Now it will test on the rest of the proteins
+
+```{r}
+protein(s2)
+
+```
+
+```{r}
+protein(s3)
+```

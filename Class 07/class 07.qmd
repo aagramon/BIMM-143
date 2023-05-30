@@ -1,0 +1,209 @@
+---
+title: "Class 07 Lab"
+author: Arturo Agramont
+Date: 2023-04-26
+format: pdf
+editor: visual
+---
+
+## Examples of K-mean Clustering
+
+K Means clustering
+
+First step is to make up some data with a known structure, so we know what the answer should be
+
+```{r}
+tmp = c(rnorm(30, mean = -3), rnorm(30, mean = 3))
+x = cbind(x = tmp, y = rev(tmp))
+plot(x)
+```
+
+Now we have some structured data in x. :et's see if k-means is able to identify the two groups
+
+```{r}
+k = kmeans(x, centers = 2, nstart = 20)
+k
+```
+
+Let's explore K:
+
+```{r}
+k$cluster
+```
+
+```{r}
+k$size
+```
+
+```{r}
+k$centers
+```
+
+```{r}
+plot(x, col = k$cluster)
+```
+
+Now we can add the cluster centers
+
+```{r}
+plot(x, col = k$cluster,)
+points(k$centers, col = "aquamarine", pch = 15)
+
+```
+
+```{r}
+k_3 = kmeans(x, centers = 3,nstart = 20)
+plot(x, col = k_3$cluster)
+```
+
+# Hierarchical
+
+This will be an example of hierarchical clustering using the hclust() function.
+
+```{r}
+clustering = hclust(dist(x))
+clustering
+```
+
+```{r}
+plot(clustering)
+```
+
+Let's add a horizontal line
+
+```{r}
+plot(clustering)
+abline(h = 10, col ="red")
+```
+
+To get our results (i.e, membership vector) we need to "cut" the tree. The function for doing so is cutree()
+
+```{r}
+subgroups = cutree(clustering, h =10)
+subgroups
+```
+
+```{r}
+plot(x, col = subgroups)
+```
+
+You can also "cut" your tree with the number of clusters you want
+
+```{r}
+cutree(clustering, k = 2)
+```
+
+# Principal Component Analysis
+
+First obtain the data
+
+```{r}
+url <- "https://tinyurl.com/UK-foods"
+x <- read.csv(url, row.names = 1)
+head(x)
+```
+
+Now we can generate basic visualizations
+
+```{r}
+barplot(as.matrix(x), col = rainbow(nrow(x)))
+```
+
+Let's refine our bar plot
+
+```{r}
+barplot(as.matrix(x), col = rainbow(nrow(x)), beside = T)
+```
+
+Other visualizations that can be useful
+
+```{r}
+pairs(x, col = rainbow(nrow(x)), pch = 15)
+```
+
+Let's apply PCA( principal components analysis). For that we need to use the command prcomp(). This function expects the transpose of our data.
+
+```{r}
+transpose_matrix = t(x) # This is not a necessary step
+pca = prcomp(t(x))
+summary(pca)
+```
+
+Let's plot the PCA results
+
+```{r}
+plot(pca)
+```
+
+We need to assess the results of the PCA analysis
+
+```{r}
+attributes(pca)
+
+```
+
+We can explore the pca\$x dataframe
+
+```{r}
+pca$x
+```
+
+```{r}
+plot(x = pca$x[,1], y = pca$x[,2] )
+```
+
+```{r}
+plot(x = pca$x[,1], y = pca$x[,2] )
+col_countries = c("orange", "red", "blue", "green")
+text(x = pca$x[,1], y = pca$x[,2], colnames(x), col = col_countries)
+```
+
+# PCA of RNA
+
+Obtain data
+
+```{r}
+url2 <- "https://tinyurl.com/expression-CSV"
+rna.data <- read.csv(url2, row.names=1)
+
+```
+
+**Q**: How many genes and samples are in this data set?
+
+```{r}
+dim(rna.data)
+```
+
+I have 100 genes and 10 samples.
+
+Let's apply PCA
+
+```{r}
+pca_rna = prcomp( t(rna.data))
+summary(pca_rna)
+```
+
+Let's plot the principal component 1 and 2
+
+```{r}
+plot(x = pca_rna$x[,1],y = pca_rna$x[,2], xlab = "PC1",ylab = "PC2" )
+```
+
+```{r}
+colnames(rna.data)
+cols_samples = c(rep("blue", 5), rep("red", 5))
+cols_samples
+
+```
+
+```{r}
+plot(x = pca_rna$x[,1],y = pca_rna$x[,2], xlab = "PC1",ylab = "PC2", col = cols_samples )
+```
+
+```{r}
+barplot(pca_rna$rotation[,1])
+```
+
+```{r}
+sort(pca_rna$rotation[,1])
+```
