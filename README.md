@@ -1,6 +1,6 @@
 # BIMM-143
 BIMM143 Bioinformatics class
-This repo is for my UCSD bioinformatics class. 
+This repository is for my UCSD bioinformatics class. 
 
 ###Index of files
 - Class 5 - [Data exploration and visualization in R](https://github.com/aagramon/BIMM-143/blob/main/class05/Class%2005%20quarto.qmd)
