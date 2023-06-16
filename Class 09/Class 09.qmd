@@ -1,0 +1,123 @@
+---
+title: "Class 09"
+format: pdf
+editor: visual
+---
+
+## PDB Exploration
+
+We will start by load a csv file from PDB
+
+To read this file we are going to use read.csv
+
+```{r}
+library(readr)
+pdb_stats <- read_csv("Data Export Summary.csv")
+pdb_stats
+```
+
+We are going to explore the data
+
+```{r}
+pdb_stats$X.ray
+```
+
+We are going to use gsub to remove commas
+
+```{r}
+as.numeric(gsub(",", "", pdb_stats$X.ray))
+```
+
+```{r}
+as.numeric(gsub(",", "", pdb_stats$EM))
+```
+
+I use sum command to get sum
+
+```{r}
+n_xray = sum(as.numeric(gsub(",", "", pdb_stats$X.ray)))
+```
+
+```{r}
+n_em = sum(as.numeric(gsub(",", "", pdb_stats$EM)))
+```
+
+```{r}
+n_total = sum(as.numeric(gsub(",", "", pdb_stats$Total)))
+```
+
+Q1. What percentage of structures in the PDB are solved by X-Ray and Electron Microscopy.
+
+```{r}
+((n_xray + n_em)/n_total) * 100
+```
+
+The percentage of structures solved by X-Ray and EM is 92.99%
+
+**Q2:** What proportion of structures in the PDB are protein?
+
+```{r}
+n_proteino = as.numeric(gsub(",", "", pdb_stats["Protein (only)","Total"]))
+n_proteino/n_total
+```
+
+0.86 proportion of the structures are proteins
+
+```{r}
+sum(as.numeric(gsub(",", "", pdb_stats$Total)))
+```
+
+Q3. Type HIV in the PDB website search box on the home page and determine how many HIV-1 protease structures are in the current PDB?
+
+Too difficult
+
+# 2. Visualizing the HIV-1 protease structure
+
+![](1HSG%20(1).png)
+
+There is a critical "conserved" water molecule in the binding site. Can you identify this water molecule? What residue number does this water molecule have
+
+Residue 308
+
+![](1HSG%20(2).png)
+
+# Intro to BIO3d in R
+
+```{r}
+library(bio3d)
+pdb= read.pdb("1hsg")
+```
+
+```{r}
+pdb
+```
+
+```{r}
+attributes(pdb)
+```
+
+```{r}
+head(pdb$atom)
+```
+
+# Predicting functional motions of a single structure by NMA
+
+```{r}
+adk = read.pdb("6s36")
+```
+
+```{r}
+adk
+```
+
+```{r}
+m = nma(adk)
+```
+
+```{r}
+plot(m)
+```
+
+```{r}
+mktrj(m, file = "adk_m7 .pdb")
+```
