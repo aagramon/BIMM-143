@@ -1,0 +1,21 @@
+---
+title: "Class 11"
+author: "Arturo Agramont"
+format: html
+editor: visual
+---
+
+## Proportion of G\|G
+
+Start by downloading the data from Ensembl
+
+```{r}
+mxl <- read.csv("373531-SampleGenotypes-Homo_sapiens_Variation_Sample_rs12936231.csv")
+mxl
+```
+
+```{r}
+table(mxl$Genotype..forward.strand.)/nrow(mxl)
+
+
+```
